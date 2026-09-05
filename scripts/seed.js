@@ -15,6 +15,7 @@
  * OJO: --reset elimina TODOS los usuarios, cursos y aprendices de la base
  * indicada en MONGO_URL. Uselo solo en la base de datos de practica.
  */
+import dns from "dns";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import bcrypt from "bcryptjs";
@@ -24,6 +25,11 @@ import Aprendiz from "../models/Aprendiz.js";
 import Usuario from "../models/Usuario.js";
 
 dotenv.config();
+
+// Mismo arreglo que en database.js: las cadenas "mongodb+srv://" hacen una
+// consulta DNS (SRV) que algunas redes rechazan ("querySrv ECONNREFUSED").
+// Forzar un DNS publico lo resuelve.
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 // Se activa si se ejecuta: node scripts/seed.js --reset
 const RESET = process.argv.includes("--reset");
